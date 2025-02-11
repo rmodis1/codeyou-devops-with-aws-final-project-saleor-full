@@ -3,7 +3,7 @@
 !.devcontainer
 !.dockerignore
 !.github
-!.gitignore
+#!.gitignore
 !.vscode
 *.log
 *.pot
