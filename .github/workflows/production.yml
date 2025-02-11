@@ -1,0 +1,23 @@
+name: Production Pipeline
+
+on:
+  push:
+    branches: [ production ]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Build Image
+        run: docker build -t saleor-api:production .
+
+      - name: Push to DockerHub
+        run: |
+          docker tag saleor-api:production ${{ secrets.DOCKER_USERNAME }}/saleor-api:production
+          docker tag saleor-api:production ${{ secrets.DOCKER_USERNAME }}/saleor-api:latest
+          docker push ${{ secrets.DOCKER_USERNAME }}/saleor-api:production
+          docker push ${{ secrets.DOCKER_USERNAME }}/saleor-api:latest
+
+      - name: Deploy to AWS
+        run: |
+          aws ecs update-service --cluster saleor --service api --force-new-deployment
