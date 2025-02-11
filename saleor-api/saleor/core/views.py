@@ -1,6 +1,7 @@
 import os
 
 from django.http import JsonResponse
+from django.http import HttpResponse
 from django.template.response import TemplateResponse
 
 from .jwt_manager import get_jwt_manager
@@ -18,3 +19,6 @@ def home(request):
 
 def jwks(request):
     return JsonResponse(get_jwt_manager().get_jwks())
+
+def health_check(request):
+    return HttpResponse(status=200)

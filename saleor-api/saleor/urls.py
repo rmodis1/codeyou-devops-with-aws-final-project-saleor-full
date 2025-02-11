@@ -3,6 +3,7 @@ from django.conf.urls.static import static
 from django.contrib.staticfiles.views import serve
 from django.urls import re_path
 from django.views.decorators.csrf import csrf_exempt
+from saleor.core.views import health_check
 
 from .core.views import jwks
 from .graphql.api import backend, schema
@@ -51,6 +52,7 @@ urlpatterns = [
         name="thumbnail",
     ),
     re_path(r"^\.well-known/jwks.json$", jwks, name="jwks"),
+    re_path(r"^health/?$", health_check, name="health_check")
 ]
 
 if settings.DEBUG:
