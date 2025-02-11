@@ -92,5 +92,5 @@ If you encounter issues or have suggestions for improvement, please message me o
 
 ---
 
-Happy building and deploying! 🚀
+Happy building, testing, and deploying! 🚀
 
