@@ -48,6 +48,7 @@ jobs:
             redis:6.2
 
       - name: Build and run API
+        working-directory: ./saleor-api
         run: |
           docker build -t saleor-api:develop .
           docker run -d --name saleor-api \
