@@ -14,6 +14,8 @@ This README serves as the entry point for students who have chosen the Saleor pr
 4. [Saleor Platform Documentation](Docs/Saleor-Platform-docs.md)
 5. [Saleor Overview](Saleor.md)
 
+{One of these links is broken}
+
 ---
 
 ## Project Overview
