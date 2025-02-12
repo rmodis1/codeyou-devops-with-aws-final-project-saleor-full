@@ -38,8 +38,8 @@ jobs:
 
       - name: Build Images
         run: |
-          cd saleor-api && docker build -t saleor-api:develop .
-          cd ../saleor-dashboard && docker build -t saleor-dashboard:develop .
+          cd saleor-api && docker build -t saleor-api:staging .
+          cd ../saleor-dashboard && docker build -t saleor-dashboard:staging .
 
       - name: Create test environment
         run: |
@@ -84,7 +84,7 @@ jobs:
       - name: API Security Scan
         uses: aquasecurity/trivy-action@master
         with:
-          image-ref: 'saleor-api:develop'
+          image-ref: 'saleor-api:staging'
           format: 'table'
           exit-code: '0'
           severity: 'CRITICAL,HIGH'
@@ -92,7 +92,7 @@ jobs:
       - name: Dashboard Security Scan
         uses: aquasecurity/trivy-action@master
         with:
-          image-ref: 'saleor-dashboard:develop'
+          image-ref: 'saleor-dashboard:staging'
           format: 'table'
           exit-code: '0'
           severity: 'CRITICAL,HIGH'
