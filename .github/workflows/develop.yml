@@ -36,41 +36,38 @@ jobs:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
 
-      - name: Build Images
+      - name: Build API Image
         run: |
           cd saleor-api && docker build -t saleor-api:develop .
-          cd ../saleor-dashboard && docker build -t saleor-dashboard:develop .
-
-      - name: Create test environment
+      
+      - name: Build Dashboard Image
+        run: |
+          cd saleor-dashboard && docker build -t saleor-dashboard:develop .
+      
+      - name: Start API and Dependencies
         run: |
           docker network create saleor-network
-          docker run -d --name postgres \
-            --network saleor-network \
-            -e POSTGRES_DB=saleor \
-            -e POSTGRES_USER=saleor \
-            -e POSTGRES_PASSWORD=saleor \
-            postgres:13
-          docker run -d --name redis \
-            --network saleor-network \
-            redis:6.2
-
-      - name: Start Services with Docker Compose
-        run: |
-          docker compose up -d
-          echo "Currently running containers:"
-          docker ps -a
-          sleep 60
-
+          docker run -d --name postgres --network saleor-network -e POSTGRES_DB=saleor -e POSTGRES_USER=saleor -e POSTGRES_PASSWORD=saleor postgres:13
+          docker run -d --name redis --network saleor-network redis:6.2
+          docker run -d --name saleor-api --network saleor-network -p 8000:8000 saleor-api:develop
+          sleep 30  # Wait for API to start
+          echo "Currently running containers:" && docker ps -a
+      
       - name: API Health Check
         run: |
           echo "Testing API health..."
           curl -v http://localhost:8000/health
-
+      
+      - name: Start Dashboard
+        run: |
+          docker run -d --name saleor-dashboard --network saleor-network -p 9000:9000 saleor-dashboard:develop
+          sleep 30  # Wait for dashboard to start
+      
       - name: Test Dashboard
         run: |
           echo "Testing dashboard..."
           curl -4 http://localhost:9000
-
+      
       - name: API Security Scan
         uses: aquasecurity/trivy-action@master
         with:
@@ -78,7 +75,7 @@ jobs:
           format: 'table'
           exit-code: '0'
           severity: 'CRITICAL,HIGH'
-
+      
       - name: Dashboard Security Scan
         uses: aquasecurity/trivy-action@master
         with:
@@ -86,7 +83,7 @@ jobs:
           format: 'table'
           exit-code: '0'
           severity: 'CRITICAL,HIGH'
-
+      
       - name: Push to DockerHub
         if: success()
         run: |
@@ -94,11 +91,9 @@ jobs:
           docker push ${{ secrets.DOCKER_USERNAME }}/saleor-api:develop
           docker tag saleor-dashboard:develop ${{ secrets.DOCKER_USERNAME }}/saleor-dashboard:develop
           docker push ${{ secrets.DOCKER_USERNAME }}/saleor-dashboard:develop
-
+      
       - name: Cleanup
         if: always()
         run: |
-          docker compose down
-          docker rm -f postgres redis || true
+          docker rm -f saleor-api saleor-dashboard postgres redis || true
           docker network rm saleor-network || true
-
