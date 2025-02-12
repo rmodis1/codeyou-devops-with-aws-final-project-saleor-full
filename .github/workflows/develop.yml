@@ -57,6 +57,8 @@ jobs:
       - name: Start Services with Docker Compose
         run: |
           docker compose up -d
+          echo "Currently running containers:"
+          docker ps -a
           sleep 60
 
       - name: API Health Check
