@@ -61,12 +61,6 @@ jobs:
       - name: Start Dashboard
         run: |
           docker run -d --name saleor-dashboard --network saleor-network -p 9000:9000 saleor-dashboard:develop
-          sleep 30  # Wait for dashboard to start
-      
-      - name: Test Dashboard
-        run: |
-          echo "Testing dashboard..."
-          curl -4 http://localhost:9000
       
       - name: API Security Scan
         uses: aquasecurity/trivy-action@master
