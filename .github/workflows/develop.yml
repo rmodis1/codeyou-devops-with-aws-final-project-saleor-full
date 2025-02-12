@@ -83,7 +83,7 @@ jobs:
 
       - name: Integration Test
         run: |
-          docker-compose up -d
+          docker compose up -d
           sleep 60
           curl -v http://localhost:8000/graphql
           curl -v http://localhost:9000
@@ -115,6 +115,6 @@ jobs:
       - name: Cleanup
         if: always()
         run: |
-          docker-compose down
+          docker compose down
           docker rm -f saleor-api postgres redis dashboard || true
           docker network rm saleor-network || true
