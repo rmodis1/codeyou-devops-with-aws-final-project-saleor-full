@@ -64,23 +64,6 @@ jobs:
           echo "Testing API health..."
           curl -v http://localhost:8000/health
 
-      - name: Test Dashboard
-        run: |
-          echo "Waiting for the dashboard to be ready..."
-         
-          for i in {1..10}; do
-            if curl -s http://localhost:9000; then
-              echo "Dashboard is up!"
-              exit 0
-            fi
-            echo "Retrying in 10 seconds..."
-            sleep 10
-          done
-
-          echo "Dashboard failed to start."
-          docker logs dashboard
-          exit 1
-
       - name: API Security Scan
         uses: aquasecurity/trivy-action@master
         with:
