@@ -54,38 +54,18 @@ jobs:
             --network saleor-network \
             redis:6.2
 
-      - name: Test API
+      - name: Start Services with Docker Compose
         run: |
-          docker run -d --name saleor-api \
-            --network saleor-network \
-            -e DEBUG=True \
-            -e DATABASE_URL=postgres://saleor:saleor@postgres:5432/saleor \
-            -e REDIS_URL=redis://redis:6379/0 \
-            -e SECRET_KEY=testing123 \
-            -p 8000:8000 \
-            saleor-api:develop
+          docker compose up -d
+          sleep 60
 
       - name: API Health Check
         run: |
-          sleep 45
-          echo "Container logs:"
-          docker logs saleor-api
           echo "Testing API health..."
           curl -v http://localhost:8000/health
 
       - name: Test Dashboard
         run: |
-          docker run -d --name dashboard \
-            -p 9000:80 \
-            saleor-dashboard:develop
-          sleep 20
-          curl -v http://localhost:9000
-
-      - name: Integration Test
-        run: |
-          docker compose up -d
-          sleep 60
-          curl -v http://localhost:8000/graphql
           curl -v http://localhost:9000
 
       - name: API Security Scan
@@ -116,5 +96,6 @@ jobs:
         if: always()
         run: |
           docker compose down
-          docker rm -f saleor-api postgres redis dashboard || true
+          docker rm -f postgres redis || true
           docker network rm saleor-network || true
+
