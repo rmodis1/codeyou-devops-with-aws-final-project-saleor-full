@@ -11,14 +11,26 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
         
-      - name: Static Analysis
+      - name: API Static Analysis
         working-directory: ./saleor-api
         run: |
           pip install ruff
           ruff check .
       
-      - name: Dependency Check
+      - name: API Dependency Check
         working-directory: ./saleor-api
+        run: |
+          pip install pip-audit
+          pip-audit
+
+      - name: Dashboard Static Analysis
+        working-directory: ./saleor-dashboard
+        run: |
+          pip install ruff
+          ruff check .
+      
+      - name: Dashboard Dependency Check
+        working-directory: ./saleor-dashboard
         run: |
           pip install pip-audit
           pip-audit
