@@ -41,7 +41,7 @@ jobs:
 
       - name: Dashboard Health Check
         run: |
-          echo: "Testing Dashboard health..."
+          echo "Testing Dashboard health..."
           curl -v http://localhost:9000 
 
       - name: Security Scan API
