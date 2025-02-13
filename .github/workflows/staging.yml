@@ -15,13 +15,13 @@ jobs:
         working-directory: ./saleor-api
         run: |
           pip install ruff
-          ruff check . || true
+          ruff check .
       
       - name: Dependency Check
         working-directory: ./saleor-api
         run: |
           pip install pip-audit
-          pip-audit || true
+          pip-audit
 
   build-and-test:
     runs-on: ubuntu-latest
