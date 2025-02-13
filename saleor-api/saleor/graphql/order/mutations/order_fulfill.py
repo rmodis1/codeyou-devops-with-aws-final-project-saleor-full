@@ -131,12 +131,7 @@ class OrderFulfill(BaseMutation):
             line_quantity_unfulfilled = order_line.quantity_unfulfilled
 
             if line_total_quantity > line_quantity_unfulfilled:
-                msg = (
-                    "Only %(quantity)d item%(item_pluralize)s remaining to fulfill."
-                ) % {
-                    "quantity": line_quantity_unfulfilled,
-                    "item_pluralize": pluralize(line_quantity_unfulfilled),
-                }
+                msg = f"Only {line_quantity_unfulfilled} item{pluralize(line_quantity_unfulfilled)} remaining to fulfill."
                 order_line_global_id = graphene.Node.to_global_id(
                     "OrderLine", order_line.pk
                 )
