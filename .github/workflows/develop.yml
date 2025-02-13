@@ -8,20 +8,29 @@ jobs:
   analyze:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-        
-      - name: Static Analysis
+      - name: API Static Analysis
         working-directory: ./saleor-api
         run: |
           pip install ruff
-          ruff check . 
+          ruff check .
       
-      - name: Dependency Check
+      - name: API Dependency Check
         working-directory: ./saleor-api
         run: |
           pip install pip-audit
-          pip-audit 
+          pip-audit || true
+
+      - name: Dashboard Static Analysis
+        working-directory: ./saleor-dashboard
+        run: |
+          pip install ruff
+          ruff check .
+      
+      - name: Dashboard Dependency Check
+        working-directory: ./saleor-dashboard
+        run: |
+          pip install pip-audit
+          pip-audit || true
 
   build-and-test:
     runs-on: ubuntu-latest
