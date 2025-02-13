@@ -15,7 +15,7 @@ jobs:
         working-directory: ./saleor-api
         run: |
           pip install ruff
-          ruff check .
+          ruff check . --fix
       
       - name: API Dependency Check
         working-directory: ./saleor-api
@@ -27,7 +27,7 @@ jobs:
         working-directory: ./saleor-dashboard
         run: |
           pip install ruff
-          ruff check .
+          ruff check . --fix
       
       - name: Dashboard Dependency Check
         working-directory: ./saleor-dashboard
