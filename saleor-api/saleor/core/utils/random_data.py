@@ -1536,7 +1536,7 @@ def create_gift_cards(how_many=5):
         gift_card.tags.add(tag)
         gift_card_events.gift_card_issued_event(gift_card, staff_user, None)
         if created:
-            yield "Gift card #{}".format(gift_card.id)
+            yield f"Gift card #{gift_card.id}"
         else:
             yield "Gift card already exists"
 
@@ -1555,7 +1555,7 @@ def create_gift_cards(how_many=5):
             raise Exception("No orders found")
         gift_card_events.gift_cards_bought_event([gift_card], order, user, None)
         if created:
-            yield f"Gift card #{gift_card.id}" 
+            yield f"Gift card #{gift_card.id}"
         else:
             yield "Gift card already exists"
 

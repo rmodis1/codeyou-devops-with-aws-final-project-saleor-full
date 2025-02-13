@@ -80,18 +80,13 @@ def _assert_num_queries(context, *, config, num, exact=True, info=None):
     if not failed:
         return
 
-    msg = "Expected to perform {} queries {}{}".format(
-        num,
-        "" if exact else "or less ",
-        "but {} done".format(
-            num_performed == 1 and "1 was" or "%d were" % (num_performed,)
-        ),
-    )
+    msg = f"Expected to perform {num} queries {'' if exact else 'or less '}" \
+      f"but {'1 was' if num_performed == 1 else f'{num_performed} were'} done"
     if info:
         msg += f"\n{info}"
     if verbose:
         sqls = (q["sql"] for q in context.captured_queries)
-        msg += "\n\nQueries:\n========\n\n{}".format("\n\n".join(sqls))
+        msg += f"\n\nQueries:\n========\n\n{'\n\n'.join(sqls)}"
     else:
         msg += " (add -v option to show queries)"
     pytest.fail(msg)
