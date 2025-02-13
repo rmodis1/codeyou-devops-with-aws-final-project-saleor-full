@@ -80,8 +80,10 @@ def _assert_num_queries(context, *, config, num, exact=True, info=None):
     if not failed:
         return
 
-    msg = f"Expected to perform {num} queries {'' if exact else 'or less '}" \
-      f"but {'1 was' if num_performed == 1 else f'{num_performed} were'} done"
+    msg = (
+        f"Expected to perform {num} queries {'' if exact else 'or less '}"
+        f"but {'1 was' if num_performed == 1 else f'{num_performed} were'} done"
+    )
     if info:
         msg += f"\n{info}"
     if verbose:
