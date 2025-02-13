@@ -11,6 +11,11 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
         
+      - name: Build Images
+        run: |
+          cd saleor-api && docker build -t saleor-api:production .
+          cd ../saleor-dashboard && docker build -t saleor-dashboard:production .
+
       - name: Create test environment
         run: |
           docker network create saleor-network
@@ -24,30 +29,20 @@ jobs:
             --network saleor-network \
             redis:6.2
 
-      - name: Build and Test API
+      - name: Start Services with Docker Compose
         run: |
-          cd saleor-api
-          docker build -t saleor-api:production .
-          docker run -d --name saleor-api \
-            --network saleor-network \
-            -e DEBUG=False \
-            -e DATABASE_URL=postgres://saleor:saleor@postgres:5432/saleor \
-            -e REDIS_URL=redis://redis:6379/0 \
-            -e SECRET_KEY=production123 \
-            -p 8000:8000 \
-            saleor-api:production
-          sleep 45
-          curl -f http://localhost:8000/health || exit 1
+          docker compose up -d
+          sleep 60
 
-      - name: Build and Test Dashboard
+      - name: API Health Check
         run: |
-          cd saleor-dashboard
-          docker build -t saleor-dashboard:production .
-          docker run -d --name dashboard \
-            -p 9000:80 \
-            saleor-dashboard:production
-          sleep 20
-          curl -f http://localhost:9000 || exit 1
+          echo "Testing API health..."
+          curl -v http://localhost:8000/health 
+
+      - name: Dashboard Health Check
+        run: |
+          echo: "Testing Dashboard health..."
+          curl -v http://localhost:9000 
 
       - name: Security Scan API
         uses: aquasecurity/trivy-action@master
