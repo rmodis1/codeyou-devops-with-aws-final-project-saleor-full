@@ -65,9 +65,9 @@ COPY ./nginx/replace-env-vars.sh /docker-entrypoint.d/50-replace-env-vars.sh
 # Make the env vars script executable
 RUN chmod +x /docker-entrypoint.d/50-replace-env-vars.sh
 
+# Expose port 80
+EXPOSE 80
+
 # Add health check
 HEALTHCHECK --interval=30s --timeout=3s \
   CMD wget --quiet --tries=1 --spider http://localhost:9000 || exit 1
-
-# Expose port 9000
-EXPOSE 9000

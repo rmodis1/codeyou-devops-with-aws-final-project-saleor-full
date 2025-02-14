@@ -16,7 +16,7 @@ services:
       - ALLOWED_HOSTS=localhost,api,dashboard
       - DJANGO_SETTINGS_MODULE=saleor.settings
       - JAEGER_AGENT_HOST=jaeger
-      - SECRET_KEY=dummy
+      - SECRET_KEY=${SALEOR_SECRET_KEY}
     networks:
       - saleor-backend-tier
     healthcheck:
@@ -31,7 +31,7 @@ services:
       context: ./saleor-dashboard
       dockerfile: Dockerfile
     ports:
-      - "9000:9000"
+      - "9000:80"
     depends_on:
       - api
     restart: unless-stopped
