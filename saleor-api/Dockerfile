@@ -47,8 +47,9 @@ COPY . .
 
 # Configure static files
 ARG STATIC_URL
+ARG SECRET_KEY
 ENV STATIC_URL=${STATIC_URL:-/static/}
-RUN SECRET_KEY=dummy STATIC_URL=${STATIC_URL} python3 manage.py collectstatic --no-input
+RUN SECRET_KEY=${SECRET_KEY:-dummy} STATIC_URL=${STATIC_URL} python3 manage.py collectstatic --no-input
 
 # Switch to non-root user
 USER saleor

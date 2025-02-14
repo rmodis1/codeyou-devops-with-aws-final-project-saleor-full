@@ -15,7 +15,7 @@ jobs:
         working-directory: ./saleor-api
         run: |
           pip install ruff
-          ruff check .
+          ruff check . --fix
       
       - name: API Dependency Check
         working-directory: ./saleor-api
@@ -27,7 +27,7 @@ jobs:
         working-directory: ./saleor-dashboard
         run: |
           pip install ruff
-          ruff check .
+          ruff check . --fix
       
       - name: Dashboard Dependency Check
         working-directory: ./saleor-dashboard
@@ -41,16 +41,14 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
-        
-      - name: Login to DockerHub
-        uses: docker/login-action@v3
-        with:
-          username: ${{ secrets.DOCKER_USERNAME }}
-          password: ${{ secrets.DOCKER_PASSWORD }}
 
       - name: Build Images
+        env:
+          SECRET_KEY: ${{ secrets.SALEOR_SECRET_KEY }}
         run: |
-          cd saleor-api && docker build -t saleor-api:staging .
+          cd saleor-api && docker build \
+            --build-arg BUILD_SECRET_KEY=${SALEOR_SECRET_KEY} \
+            -t saleor-api:staging .
           cd ../saleor-dashboard && docker build -t saleor-dashboard:staging .
 
       - name: Create test environment
@@ -67,6 +65,8 @@ jobs:
             redis:6.2
 
       - name: Start Services with Docker Compose
+        env:
+          SALEOR_SECRET_KEY: ${{ secrets.SALEOR_SECRET_KEY }}
         run: |
           docker compose up -d
           sleep 60
@@ -91,6 +91,12 @@ jobs:
           format: 'table'
           exit-code: '0'
           severity: 'CRITICAL,HIGH'
+          
+      - name: Login to DockerHub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
 
       - name: Push to DockerHub
         if: success()

@@ -3,6 +3,7 @@ services:
     build:
       context: ./saleor-api
       dockerfile: Dockerfile
+      args: SECRET_KEY: ${SECRET_KEY}
     ports:
       - "8000:8000"
     depends_on:
