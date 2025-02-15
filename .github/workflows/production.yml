@@ -93,10 +93,10 @@ jobs:
           docker push ${{ secrets.DOCKER_USERNAME }}/saleor-dashboard:production
           docker push ${{ secrets.DOCKER_USERNAME }}/saleor-dashboard:latest
 
-          docker push ${{ secrets.DOCKER_USERNAME }}/saleor-db:production
-          docker push ${{ secrets.DOCKER_USERNAME }}/saleor-redis:production
-          docker push ${{ secrets.DOCKER_USERNAME }}/saleor-jaeger:production
-          docker push ${{ secrets.DOCKER_USERNAME }}/saleor-mailpit:production
+          docker push ${{ secrets.DOCKER_USERNAME }}/saleor-db:latest
+          docker push ${{ secrets.DOCKER_USERNAME }}/saleor-redis:latest
+          docker push ${{ secrets.DOCKER_USERNAME }}/saleor-jaeger:latest
+          docker push ${{ secrets.DOCKER_USERNAME }}/saleor-mailpit:latest
 
   update-ecs:
     name: Update ECS Service
