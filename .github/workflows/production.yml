@@ -23,10 +23,10 @@ jobs:
           docker pull jaegertracing/all-in-one:1.20.0
           docker pull axllent/mailpit
           
-          docker tag postgres:15-alpine ${{ secrets.DOCKER_USERNAME }}/saleor-db:production
-          docker tag redis:7.0-alpine ${{ secrets.DOCKER_USERNAME }}/saleor-redis:production
-          docker tag jaegertracing/all-in-one:1.20.0 ${{ secrets.DOCKER_USERNAME }}/saleor-jaeger:production
-          docker tag axllent/mailpit ${{ secrets.DOCKER_USERNAME }}/saleor-mailpit:production
+          docker tag postgres:15-alpine ${{ secrets.DOCKER_USERNAME }}/saleor-db:latest
+          docker tag redis:7.0-alpine ${{ secrets.DOCKER_USERNAME }}/saleor-redis:latest
+          docker tag jaegertracing/all-in-one:1.20.0 ${{ secrets.DOCKER_USERNAME }}/saleor-jaeger:latest
+          docker tag axllent/mailpit ${{ secrets.DOCKER_USERNAME }}/saleor-mailpit:latest
 
       - name: Create test environment
         run: |
