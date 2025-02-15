@@ -13,8 +13,20 @@ jobs:
         
       - name: Build Images
         run: |
+          # Build application images
           cd saleor-api && docker build -t saleor-api:production .
           cd ../saleor-dashboard && docker build -t saleor-dashboard:production .
+          
+          # Pull and Tag service images
+          docker pull postgres:15-alpine
+          docker pull redis:7.0-alpine
+          docker pull jaegertracing/all-in-one:1.20.0
+          docker pull axllent/mailpit
+          
+          docker tag postgres:15-alpine ${{ secrets.DOCKER_USERNAME }}/saleor-db:production
+          docker tag redis:7.0-alpine ${{ secrets.DOCKER_USERNAME }}/saleor-redis:production
+          docker tag jaegertracing/all-in-one:1.20.0 ${{ secrets.DOCKER_USERNAME }}/saleor-jaeger:production
+          docker tag axllent/mailpit ${{ secrets.DOCKER_USERNAME }}/saleor-mailpit:production
 
       - name: Create test environment
         run: |
@@ -80,6 +92,11 @@ jobs:
           docker tag saleor-dashboard:production ${{ secrets.DOCKER_USERNAME }}/saleor-dashboard:latest
           docker push ${{ secrets.DOCKER_USERNAME }}/saleor-dashboard:production
           docker push ${{ secrets.DOCKER_USERNAME }}/saleor-dashboard:latest
+
+          docker push ${{ secrets.DOCKER_USERNAME }}/saleor-db:production
+          docker push ${{ secrets.DOCKER_USERNAME }}/saleor-redis:production
+          docker push ${{ secrets.DOCKER_USERNAME }}/saleor-jaeger:production
+          docker push ${{ secrets.DOCKER_USERNAME }}/saleor-mailpit:production
 
       - name: Cleanup
         if: always()
